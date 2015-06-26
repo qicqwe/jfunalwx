@@ -1,39 +1,100 @@
 package servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Servlet implementation class MainServlet
- */
-@WebServlet("/MainServlet")
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import util.SignKit;
 public class MainServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	boolean isPost = false;//是否是主动发送
     public MainServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		doPost(request, response); 
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		String signature = request.getParameter("signature");
+		String timestamp = request.getParameter("timestamp");
+		String nonce = request.getParameter("nonce");
+		String ip = request.getRemoteAddr();
+		if(!SignKit.checkSignature(signature, timestamp, nonce)){
+			return;
+		}
+		if(request.getMethod().equalsIgnoreCase("get")){
+			String echostr = request.getParameter("echostr");
+		}else{
+			try{
+				Map<String,String> map = parseXml(request);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			finally{
+			}
+			
+		}
+		if(!isPost){//被动响应
+			response.setContentType("text/plain");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = null;
+			try {
+				out = response.getWriter();
+				out.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				if(out!=null){
+					out.close();
+				}
+			}
+		}
+		
 	}
+	/**
+	 * 解析微信发来的请求
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public  Map<String, String> parseXml(HttpServletRequest request) {
+		Map<String, String> map = new HashMap<String, String>();
 
+		// 从request中取得输入流
+		InputStream in = null;
+		try {
+			in = request.getInputStream();
+			//解析XML
+			SAXReader reader = new SAXReader();
+			Document document = reader.read(in);
+			Element root = document.getRootElement();
+			List<Element> elementList = root.elements();
+			for (Element e : elementList) {
+				map.put(e.getName(), e.getText());
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			try {
+				in.close();				
+			} catch (IOException e) {
+			}
+		}
+		return map;
+	}
 }
