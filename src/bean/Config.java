@@ -1,8 +1,8 @@
 package bean;
 public class Config {
 	private static String key;
-	private static String appId;
-	private static String appSecrte;
+	private static String appId="wxba5dd0c9bde90f7c";
+	private static String appSecrte="6acca53cfcc02e939dda67aa85247b71";
 	private static String host;
 	private static String umeHost;
 	private static String accoutName;//账号名称

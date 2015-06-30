@@ -41,6 +41,8 @@ public class MainServlet extends HttpServlet {
 		}else{
 			try{
 				Map<String,String> map = parseXml(request);
+				String key = map.get("key"); 
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -96,5 +98,14 @@ public class MainServlet extends HttpServlet {
 			}
 		}
 		return map;
+	}
+	public void consloreEvent(String key){
+		switch (key) {
+		case "chart":
+			
+			break;
+		default:
+			break;
+		}
 	}
 }
