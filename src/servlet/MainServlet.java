@@ -100,12 +100,5 @@ public class MainServlet extends HttpServlet {
 		return map;
 	}
 	public void consloreEvent(String key){
-		switch (key) {
-		case "chart":
-			
-			break;
-		default:
-			break;
-		}
 	}
 }
