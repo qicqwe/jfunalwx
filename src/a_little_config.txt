@@ -4,11 +4,11 @@ password =
 devMode = true
 
 # 微信服务器回调所用的 token
-token=__my__token__
+token=557faa83d91d7fb9de803d47
 
 # 测试用的账号
-appId=yourAppId
-appSecret=yourAppSecret
+appId=wxba5dd0c9bde90f7c
+appSecret=6acca53cfcc02e939dda67aa85247b71
 
 #是否对消息进行加密，是否对消息进行加密，对应于微信平台的消息加解密方式，false支持明文模式及兼容模式，true支持安全模式及兼容模式
 #encryptMessage=false
